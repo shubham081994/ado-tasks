@@ -1,0 +1,19 @@
+# azure-pipelines-docker.yml
+trigger:
+- none
+
+variables:
+  imageName: 'python-sample'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Docker@2
+  inputs:
+    containerRegistry: 'conn2'
+    repository: '$(imageName)'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: |
+      latest

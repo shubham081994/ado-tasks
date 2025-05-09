@@ -1,0 +1,28 @@
+trigger:
+- main
+
+variables:
+  azureServiceConnection: 'conn'  # Update with your Azure DevOps service connection name
+  resourceGroupName: 'aks-resource-group'
+  location: 'eastus'
+  templateFile: 'aks-deploy.json'
+  parametersFile: 'aks-parameters.json'
+  deploymentName: 'aks-deploy-$(Build.BuildId)'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: '$(azureServiceConnection)'
+    subscriptionId: '3f98158e-d8e8-4576-be67-dec75da365d3'  # Optional if tied to the service connection
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '$(resourceGroupName)'
+    location: '$(location)'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(templateFile)'
+    csmParametersFile: '$(parametersFile)'
+    deploymentMode: 'Incremental'
+    deploymentName: '$(deploymentName)'

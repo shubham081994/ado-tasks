@@ -1,0 +1,21 @@
+trigger:
+  branches:
+    include:
+      - none
+
+variables:
+  imageName: 'python-sample'
+  tag: 'v2'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Docker@2
+  inputs:
+    containerRegistry: 'conn2'   # Replace with your actual ACR service connection
+    repository: '$(imageName)'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: |
+      $(tag)

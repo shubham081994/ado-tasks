@@ -1,0 +1,8 @@
+namespace: app3
+replicaCount: 2
+image:
+  repository: myappado22.azurecr.io/python-sample
+  tag: v3
+service:
+  type: NodePort
+  port: 80

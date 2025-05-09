@@ -1,0 +1,26 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'conn'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az aks get-credentials --resource-group aks-resource-group --name myakscluster
+      
+      # Create namespace if not exists
+      kubectl create namespace app3 --dry-run=client -o yaml | kubectl apply -f -
+      
+      # Deploy using Helm (blue-green)
+      helm upgrade --install app3-release helm/app3 \
+        --namespace app3 \
+        --set image.tag=v3 \
+        --set image.repository=myappado22.azurecr.io/python-sample \
+        --set replicaCount=2
